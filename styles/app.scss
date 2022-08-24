@@ -1,3 +1,6 @@
+@import "./globals";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
 .container {
   padding: 0 2rem;
 }
@@ -106,6 +109,10 @@
 .logo {
   height: 1em;
   margin-left: 0.5rem;
+}
+
+button.disabled {
+  pointer-events: none;
 }
 
 @media (max-width: 600px) {
