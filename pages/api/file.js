@@ -25,6 +25,6 @@ export default async (req, res) => {
       res.status(200).json({ fields, files });
     });
 
-    axios(process.cwd() + "/pages/api/ftp");
+    //axios(process.cwd() + "/pages/api/ftp");
   });
 };
