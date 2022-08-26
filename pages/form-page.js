@@ -1,11 +1,12 @@
 import { useState, setState } from "react";
 import axios from "axios";
+import Image from "next/image";
 
 export default function PrivatePage(props) {
   const [image, setImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
 
-  const [isValid, setValid] = useState(false);
+  const [isValid, setValid] = useState(null);
   const [isRunning, setRunning] = useState(false);
   const [isUploaded, setUploaded] = useState(false);
   const [isTriggered, setTriggered] = useState(false);
@@ -29,15 +30,8 @@ export default function PrivatePage(props) {
     }
   };
 
-  function wait(ms) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  }
-
   const uploadToLocal = async (event) => {
     const body = new FormData();
-    // console.log("file", image)
     body.append("file", image);
     const response = await fetch("/api/file", {
       method: "POST",
@@ -64,16 +58,26 @@ export default function PrivatePage(props) {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-12 text-center">
-          <h4>HSky Catalog Importer</h4>
+        <div className="col-12 col-md-6 mx-auto text-center">
+          <Image
+            src="/hskytrd.png"
+            width="250px"
+            height="100px"
+            objectFit="contain"
+          />
         </div>
       </div>
-      <div className="row" id="main">
-        <div class="col-12 col-md-8 mx-auto">
-          <div class="row" id="csv">
-            <div class="col-12">
+      <div className="row">
+        <div className="col-10 col-md-8 mx-auto" id="main">
+          <div className="row">
+            <div className={isRunning ? "d-none" : "col-12"} id="csv">
               <label htmlFor="file">CSV Upload</label>
-              <span className="file-message">*Only accepts CSV file</span>
+              <span
+                className={isValid == false ? "invalid" : undefined}
+                id="file-message"
+              >
+                *only accepts CSV file
+              </span>
               <input
                 type="file"
                 name="file"
@@ -86,34 +90,50 @@ export default function PrivatePage(props) {
                   isValid ? "btn btn-primary" : "btn btn-primary disabled"
                 }
                 type="submit"
-                onClick={isValid ? uploadToLocal : undefined}
+                onClick={isValid == true ? uploadToLocal : undefined}
               >
                 Submit
               </button>
             </div>
-          </div>
-          <div className={isTriggered ? undefined : "d-none"}>
-            {isComplete ? (
-              <h2>Import Completed</h2>
-            ) : (
-              <>
-                <h2>Import is Triggered.</h2>
-                <h4>Un momento</h4>
-              </>
-            )}
-          </div>
-          <div className={isRunning ? "row active" : "d-none"} id="progress">
-            <div className="col-3 complete">
-              <div>Process Starting</div>
-            </div>
-            <div className={isUploaded ? "col-3 complete" : "col-3"}>
-              <div>Uploading</div>
-            </div>
-            <div className={isTriggered ? "col-3 complete" : "col-3"}>
-              <div>FTP</div>
-            </div>
-            <div className={isComplete ? "col-3 complete" : "col-3"}>
-              <div>Importing</div>
+            <div
+              className={isRunning ? "col-12" : "d-none"}
+              id="progress-container"
+            >
+              <div
+                className={isRunning ? "row active" : "d-none"}
+                id="progress"
+              >
+                <div className="col-12 col-md-6 col-lg-3 complete">
+                  <div>1. Process Started</div>
+                </div>
+                {isUploaded ? (
+                  <div className="col-12 col-md-6 col-lg-3 complete">
+                    <div>2. Uploaded</div>
+                  </div>
+                ) : (
+                  <div className="col-12 col-md-6 col-lg-3">
+                    <div>2. Uploading</div>
+                  </div>
+                )}
+                {isTriggered ? (
+                  <div className="col-12 col-md-6 col-lg-3 complete">
+                    <div>3. FTP Uploaded</div>
+                  </div>
+                ) : (
+                  <div className="col-12 col-md-6 col-lg-3">
+                    <div>3. FTP Uploading</div>
+                  </div>
+                )}
+                {isComplete ? (
+                  <div className="col-12 col-md-6 col-lg-3 complete">
+                    <div>4. Importing Completed</div>
+                  </div>
+                ) : (
+                  <div className="col-12 col-md-6 col-lg-3">
+                    <div>4. Importing in Progress</div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
