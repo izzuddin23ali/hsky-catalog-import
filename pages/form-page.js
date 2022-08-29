@@ -45,7 +45,7 @@ export default function PrivatePage(props) {
       if (filetype == "text/csv") {
         setFile(i);
         console.log(file);
-        handleParse();
+        handleParse(i);
       } else {
         setValid(false);
       }
@@ -60,26 +60,17 @@ export default function PrivatePage(props) {
         }
       }*/
 
-  const handleParse = () => {
-    const reader = new FileReader();
-    reader.onload = async ({ target }) => {
-      const csv = Papa.parse(target.result, { header: true });
-      const parsedData = csv?.data;
-      const columns = Object.keys(parsedData[0]);
-      columns.forEach((col) => {
-        console.log(col);
+  const handleParse = async (inFile) => {
+    if (!inFile) {
+      console.log("no file yet");
+    } else {
+      Papa.parse(inFile, {
+        header: true,
+        complete: function (results, file) {
+          console.log("Parsing complete:", results, file);
+          console.log(results.meta.fields);
+        },
       });
-      setData(columns);
-    };
-    //reader.readAsText(file);
-    setValid(true);
-    var num;
-    for (num = 0; num < 10; num++) {
-      if (validColumns[num] != data[num]) {
-        console.log(validColumns[num] + " " + data[num]);
-        console.log(data);
-        setValid(false);
-      }
     }
   };
 
@@ -147,6 +138,7 @@ export default function PrivatePage(props) {
               >
                 Submit
               </button>
+              {data && data.length > 0 && <p>ada data</p>}
             </div>
             <div
               className={isRunning ? "col-12" : "d-none"}
