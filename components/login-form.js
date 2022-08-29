@@ -2,8 +2,7 @@ import axios from "axios";
 import { Formik } from "formik";
 import { useState } from "react";
 
-export default function Login(props) {
-  const [errorMessage, setErrorMessage] = useState("");
+export default function LoginForm() {
   return (
     <div className="container">
       <div className="row">
@@ -24,11 +23,6 @@ export default function Login(props) {
             onSubmit={(values, { setSubmitting }) => {
               axios.post("/api/login", values).then((res) => {
                 console.log(res);
-                if (res.data == true) {
-                  window.location = "/form-page";
-                } else {
-                  //
-                }
               });
             }}
           >

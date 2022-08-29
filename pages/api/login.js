@@ -22,7 +22,8 @@ export default async function login(req, res) {
       })
       .then((response) => {
         console.log(response);
-        return res.send(response.body);
+        console.log(response.data);
+        return res.send(response.data);
       });
   } catch (err) {
     console.log("an error occured");
