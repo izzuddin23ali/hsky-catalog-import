@@ -35,7 +35,6 @@ export default function PrivatePage(props) {
   const uploadToClient = (event) => {
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0];
-      console.log(i);
 
       setImage(i);
       setCreateObjectURL(URL.createObjectURL(i));
@@ -44,7 +43,6 @@ export default function PrivatePage(props) {
 
       if (filetype == "text/csv") {
         setFile(i);
-        console.log(file);
         handleParse(i);
       } else {
         setValid(false);
@@ -69,6 +67,13 @@ export default function PrivatePage(props) {
         complete: function (results, file) {
           console.log("Parsing complete:", results, file);
           console.log(results.meta.fields);
+          setData(results.meta.fields);
+          setValid(true);
+          validColumns.forEach((col) => {
+            if (results.meta.fields.indexOf(col) < 0) {
+              setValid(false);
+            }
+          });
         },
       });
     }
@@ -138,7 +143,6 @@ export default function PrivatePage(props) {
               >
                 Submit
               </button>
-              {data && data.length > 0 && <p>ada data</p>}
             </div>
             <div
               className={isRunning ? "col-12" : "d-none"}
