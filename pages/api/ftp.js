@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       host: process.env.TEST_FTP_HOST,
       port: 21,
       localRoot: process.cwd() + "/public/import",
-      remoteRoot: "staging5.hcatalog.hocodev.com/public_html/import/",
+      remoteRoot: process.env.TEST_FTP_REMOTE_ROOT_1,
       include: ["import.csv"],
       exclude: ["dist/**.map", "node_modules/**", "node_modules/**", ".git/**"],
       deleteRemote: false,

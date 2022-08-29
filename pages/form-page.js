@@ -1,6 +1,8 @@
 import { useState, setState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import loading from "../components/loading";
+import Loading from "../components/loading";
 
 export default function PrivatePage(props) {
   const [image, setImage] = useState(null);
@@ -44,7 +46,7 @@ export default function PrivatePage(props) {
         setUploaded(true);
         if (res.status == 200) {
           setTriggered(true);
-          axios.get("/api/hello").then((res) => {
+          axios.get("/api/import").then((res) => {
             console.log(res);
             if (res.status == 200) {
               setComplete(true);
@@ -112,7 +114,10 @@ export default function PrivatePage(props) {
                   </div>
                 ) : (
                   <div className="col-12 col-md-6 col-lg-3">
-                    <div>2. Uploading</div>
+                    <div>
+                      <Loading />
+                      2. Uploading
+                    </div>
                   </div>
                 )}
                 {isTriggered ? (
@@ -121,7 +126,10 @@ export default function PrivatePage(props) {
                   </div>
                 ) : (
                   <div className="col-12 col-md-6 col-lg-3">
-                    <div>3. FTP Uploading</div>
+                    <div>
+                      <Loading />
+                      3. FTP Uploading
+                    </div>
                   </div>
                 )}
                 {isComplete ? (
@@ -130,7 +138,10 @@ export default function PrivatePage(props) {
                   </div>
                 ) : (
                   <div className="col-12 col-md-6 col-lg-3">
-                    <div>4. Importing in Progress</div>
+                    <div>
+                      <Loading />
+                      4. Importing in Progress
+                    </div>
                   </div>
                 )}
               </div>
