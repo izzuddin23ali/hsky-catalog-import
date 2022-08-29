@@ -3,16 +3,6 @@ import { Formik } from "formik";
 import { useState } from "react";
 
 export default function Login(props) {
-  const login = (event) => {
-    axios
-      .post(process.env.TEST_LOGIN_API, {
-        username: event.target.email.value,
-        password: event.target.password.value,
-      })
-      .then((res) => {
-        console.log(res);
-      });
-  };
   const [errorMessage, setErrorMessage] = useState("");
   return (
     <div className="container">
@@ -32,14 +22,9 @@ export default function Login(props) {
               return errors;
             }}
             onSubmit={(values, { setSubmitting }) => {
-              axios
-                .post(process.env.TEST_LOGIN_API, {
-                  username: values.email,
-                  password: values.password,
-                })
-                .then((res) => {
-                  console.log(res);
-                });
+              axios.post("/api/login", values).then((res) => {
+                console.log(res);
+              });
             }}
           >
             {({

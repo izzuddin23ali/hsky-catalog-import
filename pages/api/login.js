@@ -1,21 +1,31 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+import Cors from "cors";
+import initMiddleware from "../../lib/init-middleware";
+import path, { join } from "path";
+import axios from "axios";
 
-export default withIronSessionApiRoute(
-  async function loginRoute(req, res) {
-    // get user from database then:
-    req.session.user = {
-      id: 230,
-      admin: true,
-    };
-    await req.session.save();
-    res.send({ ok: true });
-  },
-  {
-    cookieName: "myapp_cookiename",
-    password: "complex_password_at_least_32_characters_long",
-    // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
-    cookieOptions: {
-      secure: process.env.NODE_ENV === "production",
-    },
-  }
+const cors = initMiddleware(
+  Cors({
+    methods: ["POST", "GET"],
+    origin: "*",
+  })
 );
+
+export default async function login(req, res) {
+  await cors(req, res);
+  //console.log(req);
+  console.log(req.body);
+  try {
+    axios
+      .post(process.env.TEST_LOGIN_API, {
+        username: req.body.email,
+        password: req.body.password,
+      })
+      .then((response) => {
+        console.log(response);
+        return res.send(response.body);
+      });
+  } catch (err) {
+    console.log("an error occured");
+    return res.status(500).send({ message: "Something went wrong!" });
+  }
+}

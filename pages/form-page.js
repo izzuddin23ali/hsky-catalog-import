@@ -1,8 +1,8 @@
 import { useState, setState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import loading from "../components/loading";
 import Loading from "../components/loading";
+import Papa from "papaparse";
 
 export default function PrivatePage(props) {
   const [image, setImage] = useState(null);
@@ -13,6 +13,24 @@ export default function PrivatePage(props) {
   const [isUploaded, setUploaded] = useState(false);
   const [isTriggered, setTriggered] = useState(false);
   const [isComplete, setComplete] = useState(false);
+
+  const [data, setData] = useState([]);
+  const [error, setError] = useState("");
+  const [file, setFile] = useState("");
+
+  const validColumns = [
+    "SKU",
+    "Brand",
+    "Name",
+    "Product Name",
+    "Variant",
+    "Parent Category",
+    "Child Category",
+    "Description",
+    "Image Name",
+    "Barcode Image Name",
+    "Stock Number",
+  ];
 
   const uploadToClient = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -25,8 +43,41 @@ export default function PrivatePage(props) {
       var filetype = i.type;
 
       if (filetype == "text/csv") {
-        setValid(true);
+        setFile(i);
+        console.log(file);
+        handleParse();
       } else {
+        setValid(false);
+      }
+    }
+  };
+
+  /*var num;
+      for (num = 0; num < 10; num++) {
+        if (validColumns[num] != data[num]) {
+          console.log(validColumns[num] + " " + data[num]);
+          setValid(false);
+        }
+      }*/
+
+  const handleParse = () => {
+    const reader = new FileReader();
+    reader.onload = async ({ target }) => {
+      const csv = Papa.parse(target.result, { header: true });
+      const parsedData = csv?.data;
+      const columns = Object.keys(parsedData[0]);
+      columns.forEach((col) => {
+        console.log(col);
+      });
+      setData(columns);
+    };
+    //reader.readAsText(file);
+    setValid(true);
+    var num;
+    for (num = 0; num < 10; num++) {
+      if (validColumns[num] != data[num]) {
+        console.log(validColumns[num] + " " + data[num]);
+        console.log(data);
         setValid(false);
       }
     }
