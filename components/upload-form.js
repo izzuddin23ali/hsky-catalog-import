@@ -50,14 +50,6 @@ export default function FileUpload() {
     }
   };
 
-  /*var num;
-        for (num = 0; num < 10; num++) {
-          if (validColumns[num] != data[num]) {
-            console.log(validColumns[num] + " " + data[num]);
-            setValid(false);
-          }
-        }*/
-
   const handleParse = async (inFile) => {
     if (!inFile) {
       console.log("no file yet");
@@ -72,6 +64,9 @@ export default function FileUpload() {
           validColumns.forEach((col) => {
             if (results.meta.fields.indexOf(col) < 0) {
               setValid(false);
+              setError(
+                "the CSV file have either missing or additional columns, please input appropriate CSV file"
+              );
             }
           });
         },
@@ -107,16 +102,6 @@ export default function FileUpload() {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-12 col-md-6 mx-auto text-center">
-          <Image
-            src="/hskytrd.png"
-            width="250px"
-            height="100px"
-            objectFit="contain"
-          />
-        </div>
-      </div>
-      <div className="row">
         <div className="col-10 col-md-8 mx-auto" id="main">
           <div className="row">
             <div className={isRunning ? "d-none" : "col-12"} id="csv">
@@ -125,7 +110,7 @@ export default function FileUpload() {
                 className={isValid == false ? "invalid" : undefined}
                 id="file-message"
               >
-                *only accepts CSV file
+                *only accepts CSV file{error ? ", " + error : undefined}
               </span>
               <input
                 type="file"

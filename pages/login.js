@@ -7,7 +7,7 @@ export default function Login(props) {
   return (
     <div className="container">
       <div className="row">
-        <div className="col-12">
+        <div className="col-12" id="login-form-container">
           <Formik
             initialValues={{ email: "", password: "" }}
             validate={(values) => {
@@ -25,7 +25,7 @@ export default function Login(props) {
               axios.post("/api/login", values).then((res) => {
                 console.log(res);
                 if (res.data == true) {
-                  window.location = "/form-page";
+                  //window.location = "/form-page";
                 } else {
                   //
                 }

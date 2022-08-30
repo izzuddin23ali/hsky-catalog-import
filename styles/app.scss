@@ -30,7 +30,7 @@ button.disabled {
 }
 
 #file-message.invalid {
-  color: red;
+  color: #ff0000;
 }
 
 #csv input {
@@ -65,6 +65,21 @@ button.disabled {
   padding: 24px;
   border-radius: 12px;
   background-color: #fff;
+}
+
+#main button {
+  margin-top: 8px;
+  padding: 8px 28px;
+  background-color: #2c383a;
+  border-radius: 3px;
+  font-size: 15px;
+  text-transform: uppercase;
+  outline: 0;
+  border-width: 0;
+}
+
+#main button:hover {
+  background-color: #00ccf5;
 }
 
 /*loading*/
@@ -115,7 +130,63 @@ button.disabled {
 
 /*login*/
 
-#login {
+#login-form-container {
   background-color: #fff;
-  padding: 20px;
+  padding: 40px;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+#login-form-container form input {
+  margin-bottom: 12px;
+}
+
+#login-form-container form button {
+  margin-top: 8px;
+  padding: 8px 28px;
+  background-color: #2c383a;
+  border-radius: 3px;
+  font-size: 15px;
+  text-transform: uppercase;
+  outline: 0;
+  border-width: 0;
+  display: block;
+}
+
+#login-form-container form button:hover {
+  background-color: #00ccf5;
+}
+
+#login-form-container form button:disabled:hover {
+  background-color: #2c383a;
+}
+
+span.login-message {
+  font-size: 12px;
+  font-weight: 300;
+  color: #ff0000;
+}
+
+@media (max-width: 767px) {
+  #login-form-container {
+    padding: 24px;
+  }
+
+  #login-form-container input,
+  #login-form-container button {
+    width: 100%;
+  }
+}
+
+/*footer*/
+#footer {
+  color: #fff;
+  margin-top: 80px;
+  font-weight: 300;
+  font-size: 12px;
+  //position: absolute;
+  //bottom: 0;
+  //width: 100%;
+  padding-bottom: 4px;
+  //left: 50%;
 }
