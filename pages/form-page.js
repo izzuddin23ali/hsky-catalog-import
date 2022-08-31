@@ -1,8 +1,8 @@
 import { useState, setState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import Loading from "../components/loading";
 import Papa from "papaparse";
+import Loading from "../components/LoadingRing";
 
 export default function PrivatePage(props) {
   const [image, setImage] = useState(null);

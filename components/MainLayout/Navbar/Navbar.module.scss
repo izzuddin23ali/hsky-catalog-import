@@ -1,0 +1,59 @@
+@import "../../../styles/globals";
+
+.mainNav {
+  background: $dark-blue;
+  padding: 16px 0;
+  border: 0;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+}
+
+.navBrand {
+  margin-right: 32px;
+  a {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.navContent {
+  a {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 14px;
+
+    &:hover {
+      color: $sky-blue;
+      &:after {
+        width: 100%;
+      }
+    }
+    &:after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 2px;
+      background: $sky-blue;
+      transition: width 0.3s;
+    }
+  }
+}
+
+.navUser {
+  .userDropdown {
+    &.loggedOut {
+      background: $sky-blue;
+      border-radius: 20px;
+      color: $dark-blue;
+      padding: 8px 20px;
+      .user {
+        font-size: 14px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-right: 6px;
+      }
+      svg {
+        padding-top: 2px;
+      }
+    }
+  }
+}

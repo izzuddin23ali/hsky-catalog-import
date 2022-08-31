@@ -1,26 +1,36 @@
-html,
-body {
-  padding: 0;
+$sky-blue: #00ccf5;
+$blue: #0095b4;
+$dark-blue: #2c383a;
+$green: #88e91c;
+$red: #ec7063;
+
+$font-main: "Nunito Sans", sans-serif;
+$font-secondary: "Nunito Sans", sans-serif;
+
+$bg-gradient-base: #aee1f9;
+$bg-gradient: linear-gradient(315deg, #aee1f9 0%, #f6ebe6 74%);
+
+$box-shadow-1: rgb(0 0 0 / 4%) 0px 3px 5px;
+
+%global-button {
+  padding: 10px 32px;
+  background: $dark-blue;
+  border-radius: 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  outline: 0;
+  border: 0;
+  transition: all 0.3s ease-in;
+  font-weight: 400;
+  min-width: 120px;
+  max-height: 41px;
+  overflow: hidden;
+  &:hover {
+    background: $sky-blue;
+  }
+}
+
+%no-spacing {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+  padding: 0;
 }

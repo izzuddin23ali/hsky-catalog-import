@@ -1,0 +1,71 @@
+@import "../../../styles/globals";
+
+.loginContainer {
+  background-color: #fefefe;
+  background-image: url(/static/images/abstract-bg-transparent.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: $box-shadow-1;
+  h1 {
+    color: $dark-blue;
+    font-weight: 700;
+  }
+  form {
+    .formField {
+      margin-bottom: 28px;
+      position: relative;
+      .error {
+        font-size: 11px;
+        font-weight: 600;
+        color: $red;
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        width: 100%;
+      }
+    }
+    input {
+      border: 1px solid #00000010;
+      padding: 8px 20px;
+      font-size: 16px;
+      font-weight: 300;
+      border-radius: 6px;
+      outline: none;
+      width: 100%;
+      &[isinvalid="Required"] {
+        border: 1px solid $red;
+      }
+    }
+    label {
+      color: $blue;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    button {
+      @extend %global-button;
+      background: $sky-blue;
+      color: #fff;
+      position: relative;
+      z-index: 99;
+      &:hover {
+        background: $green;
+      }
+      &:disabled {
+        background: $dark-blue;
+        opacity: 0.85;
+        cursor: not-allowed;
+      }
+    }
+    .formError {
+      background: $red;
+      color: #fff;
+      padding: 12px 20px;
+      display: block;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+@import "../../styles/globals";
+
+.boxContainer {
+  background-image: url(/static/images/hsky-bg.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  padding: 60px;
+  border-radius: 20px;
+  box-shadow: $box-shadow-1;
+  .contentContainer {
+    a {
+      @extend %global-button;
+      background: $sky-blue;
+      margin-top: 16px;
+      display: inline-block;
+      color: #fff;
+      &:hover {
+        background: $green;
+      }
+    }
+    h1 {
+      font-weight: 700;
+      @extend %no-spacing;
+    }
+    p {
+      font-weight: 300;
+      @extend %no-spacing;
+    }
+  }
+}

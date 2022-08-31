@@ -1,6 +1,5 @@
 import Cors from "cors";
 import initMiddleware from "../../lib/init-middleware";
-import path, { join } from "path";
 import axios from "axios";
 
 const cors = initMiddleware(
@@ -12,21 +11,26 @@ const cors = initMiddleware(
 
 export default async function login(req, res) {
   await cors(req, res);
-  //console.log(req);
-  console.log(req.body);
   try {
-    axios
-      .post(process.env.TEST_LOGIN_API, {
-        username: req.body.email,
+    return axios
+      .post(process.env.LOGIN_CHECK_ENDPOINT, {
+        username: req.body.username,
         password: req.body.password,
       })
       .then((response) => {
-        console.log(response);
-        console.log(response.data);
-        return res.send(response.data);
+        return res.send({
+          success: response.data.success,
+          message: response.data.message,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        return res.status(500).send({ success: false, message: "Error" });
       });
   } catch (err) {
     console.log("an error occured");
-    return res.status(500).send({ message: "Something went wrong!" });
+    return res
+      .status(500)
+      .send({ success: false, message: "Something went wrong!" });
   }
 }

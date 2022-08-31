@@ -1,8 +1,8 @@
 import { useState, setState, useRef } from "react";
 import axios from "axios";
 import Image from "next/image";
-import Loading from "../components/loading";
 import Papa from "papaparse";
+import Loading from "./LoadingRing";
 
 export default function FileUpload() {
   const [image, setImage] = useState(null);
