@@ -1,6 +1,7 @@
 import Cors from "cors";
 import initMiddleware from "../../lib/init-middleware";
 import axios from "axios";
+import { withSessionRoute } from "../../lib/auth/withSession";
 
 const cors = initMiddleware(
   Cors({
@@ -9,7 +10,7 @@ const cors = initMiddleware(
   })
 );
 
-export default async function login(req, res) {
+async function loginRoute(req, res) {
   await cors(req, res);
   try {
     return axios
@@ -18,10 +19,24 @@ export default async function login(req, res) {
         password: req.body.password,
       })
       .then((response) => {
-        return res.send({
-          success: response.data.success,
-          message: response.data.message,
-        });
+        if (response.data.success == true) {
+          req.session.user = {
+            id: response.data.user_id,
+            username: response.data.username,
+            full_name: response.data.user_fullname,
+          };
+          await req.session.save();
+          return res.send({
+            success: true,
+            message: "Authentication successful.",
+          });
+        }
+        else {
+          return res.send({
+            success: false,
+            message: response.data.message,
+          });
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -34,3 +49,5 @@ export default async function login(req, res) {
       .send({ success: false, message: "Something went wrong!" });
   }
 }
+
+export default withSessionRoute(loginRoute);

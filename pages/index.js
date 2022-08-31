@@ -10,7 +10,7 @@ export default function Home(props) {
       <div className="container py-5">
         <LoginForm />
         {catalogURL && (
-          <div className="pt-4">
+          <div className="mt-5">
             <CatalogBox catalogUrl={catalogURL} />
           </div>
         )}

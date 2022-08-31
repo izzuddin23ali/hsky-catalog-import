@@ -4,9 +4,11 @@ import { useState } from "react";
 import styles from "./Login.module.scss";
 import cx from "classnames";
 import Loading from "../../LoadingRing";
+import { useRouter } from "next/router";
 
 export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
   return (
     <div className="row d-flex justify-content-center align-items-center">
       <div className={cx("col-12 col-md-6", styles.loginContainer)}>
@@ -29,15 +31,17 @@ export default function LoginForm() {
               .post("/api/login", values)
               .then((res) => {
                 if (res.data.success == true) {
-                  setErrorMessage("that is correct");
+                  router.replace("/dashboard");
                 } else {
                   setErrorMessage(res.data.message);
                 }
+                setSubmitting(false);
               })
               .catch((error) => {
                 setErrorMessage(
                   "An unexpected error occurred. Please refresh and try again."
                 );
+                setSubmitting(false);
               });
           }}
         >
