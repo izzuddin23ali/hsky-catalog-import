@@ -51,13 +51,32 @@ button.disabled {
 }
 
 #progress div div {
-  background-color: lightblue;
-  min-height: 100px;
+  background-color: #2c383a;
+  min-height: 180px;
   padding: 12px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-around;
+  align-content: space-around;
+  flex-wrap: wrap;
+  color: #fff;
+}
+
+@keyframes inProgress {
+  0% {
+    background-color: #2c383a;
+  }
+  50% {
+    background-color: #00ccf5;
+  }
+  100% {
+    background-color: #2c383a;
+  }
 }
 
 #progress div.complete div {
-  background-color: #2c383a;
+  background-color: #00ccf5;
   color: #fff;
 }
 
@@ -76,10 +95,51 @@ button.disabled {
   text-transform: uppercase;
   outline: 0;
   border-width: 0;
+  transition: all 0.5s ease;
 }
 
 #main button:hover {
   background-color: #00ccf5;
+  transition: all 0.5s ease;
+}
+
+#complete-container {
+  text-align: center;
+  margin-right: auto;
+  margin-left: auto;
+  align-items: center;
+  justify-content: space-around;
+  display: flex;
+}
+
+#complete-container a {
+  color: #fff;
+  text-decoration: none;
+}
+
+@media (max-width: 1024px) {
+  #progress-container {
+    padding: 0 20px 20px 20px;
+  }
+  #progress div div {
+    padding: 40px;
+  }
+  #complete-container {
+    display: block;
+  }
+
+  #complete-container button {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  #complete-container a button {
+    margin-bottom: 0;
+  }
+
+  #main {
+    padding: 24px;
+  }
 }
 
 /*loading*/
@@ -151,10 +211,12 @@ button.disabled {
   outline: 0;
   border-width: 0;
   display: block;
+  transition: all 0.5s ease;
 }
 
 #login-form-container form button:hover {
   background-color: #00ccf5;
+  transition: all 0.5s ease;
 }
 
 #login-form-container form button:disabled:hover {
@@ -172,9 +234,12 @@ span.login-message {
     padding: 24px;
   }
 
-  #login-form-container input,
-  #login-form-container button {
+  #login-form-container input {
     width: 100%;
+  }
+
+  #login-form-container button {
+    margin: 20px auto 0 auto !important;
   }
 }
 
@@ -184,9 +249,11 @@ span.login-message {
   margin-top: 80px;
   font-weight: 300;
   font-size: 12px;
-  //position: absolute;
-  //bottom: 0;
-  //width: 100%;
   padding-bottom: 4px;
-  //left: 50%;
+}
+
+@media (max-width: 767px) {
+  #footer {
+    margin-top: 60px;
+  }
 }

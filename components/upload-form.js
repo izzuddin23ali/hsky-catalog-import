@@ -1,4 +1,4 @@
-import { useState, setState } from "react";
+import { useState, setState, useRef } from "react";
 import axios from "axios";
 import Image from "next/image";
 import Loading from "../components/loading";
@@ -17,6 +17,8 @@ export default function FileUpload() {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [file, setFile] = useState("");
+
+  const ref = useRef();
 
   const validColumns = [
     "SKU",
@@ -38,6 +40,7 @@ export default function FileUpload() {
 
       setImage(i);
       setCreateObjectURL(URL.createObjectURL(i));
+      setError("");
 
       var filetype = i.type;
 
@@ -99,10 +102,19 @@ export default function FileUpload() {
     }
   };
 
+  const resetAllState = () => {
+    setRunning(false);
+    setValid(null);
+    setUploaded(false);
+    setTriggered(false);
+    setComplete(false);
+    ref.current.value = null;
+  };
+
   return (
     <div className="container">
       <div className="row">
-        <div className="col-10 col-md-8 mx-auto" id="main">
+        <div className="col-10 col-lg-8 mx-auto" id="main">
           <div className="row">
             <div className={isRunning ? "d-none" : "col-12"} id="csv">
               <label htmlFor="file">CSV Upload</label>
@@ -116,6 +128,7 @@ export default function FileUpload() {
                 type="file"
                 name="file"
                 id="file"
+                ref={ref}
                 onChange={uploadToClient}
                 disabled={isUploaded ? "disabled" : undefined}
               />
@@ -179,6 +192,16 @@ export default function FileUpload() {
               </div>
             </div>
           </div>
+          {isComplete ? (
+            <div className="row">
+              <div className="col-12 col-md-10" id="complete-container">
+                <button onClick={resetAllState}>Upload Another CSV</button>
+                <a href="#">
+                  <button>Go to HSky Catalog</button>
+                </a>
+              </div>
+            </div>
+          ) : undefined}
         </div>
       </div>
     </div>

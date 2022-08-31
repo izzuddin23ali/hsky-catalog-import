@@ -43,7 +43,7 @@ export default function Home() {
               }}
               onSubmit={(values, { setSubmitting }) => {
                 axios.post("/api/login", values).then((res) => {
-                  console.log(res);
+                  console.log(values.email);
                   if (res.data == true) {
                     setLogin(true);
                   } else {
@@ -66,7 +66,7 @@ export default function Home() {
                 /* and other goodies */
               }) => (
                 <form onSubmit={handleSubmit}>
-                  <label for="email">Email</label>
+                  <label htmlFor="email">Email</label>
                   <input
                     type="email"
                     name="email"
@@ -75,7 +75,7 @@ export default function Home() {
                     value={values.email}
                   />
                   {errors.email && touched.email && errors.email}
-                  <label for="password">Password</label>
+                  <label htmlFor="password">Password</label>
                   <input
                     type="password"
                     name="password"
