@@ -7,7 +7,7 @@ export const config = {
   },
 };
 
-async function uploadLocal(req, res) {
+export default async function handler(req, res) {
   const data = await new Promise((resolve, reject) => {
     const form = new IncomingForm();
 
@@ -22,5 +22,3 @@ async function uploadLocal(req, res) {
     });
   });
 }
-
-export default uploadLocal;
