@@ -1,19 +1,34 @@
-import { useState, setState } from "react";
-import axios from "axios";
-import Image from "next/image";
-import Papa from "papaparse";
-import Loading from "../components/LoadingRing";
 import Layout from "../components/MainLayout/Layout";
-import FileUpload from "../components/upload-form";
+import { withSessionSsr } from "../lib/auth/withSession";
+import FileUpload from "../components/Forms/Upload";
 
-export default function Dashboard(props) {
+export default function Dashboard({ user }) {
+  const name = user.full_name;
   return (
-    <Layout title="Dashboard">
+    <Layout title="Dashboard" session={user}>
       <div className="container">
-        <div className="row">
-          <p>Hello this is test page</p>
-        </div>
+        <FileUpload />
       </div>
     </Layout>
   );
 }
+
+export const getServerSideProps = withSessionSsr(
+  async function getServerSideProps({ req }) {
+    const user = req.session.user;
+
+    if (!user) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/",
+        },
+      };
+    }
+    return {
+      props: {
+        user: req.session.user,
+      },
+    };
+  }
+);

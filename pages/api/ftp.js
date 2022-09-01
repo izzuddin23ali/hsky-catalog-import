@@ -16,12 +16,12 @@ export default async function handler(req, res) {
 
   try {
     const config = {
-      user: process.env.TEST_FTP_USERNAME_1,
-      password: process.env.TEST_FTP_PASSWORD_1,
-      host: process.env.TEST_FTP_HOST,
+      user: process.env.SERVER_FTP_USERNAME,
+      password: process.env.SERVER_FTP_PASSWORD,
+      host: process.env.SERVER_FTP_HOST,
       port: 21,
       localRoot: process.cwd() + "/public/import",
-      remoteRoot: process.env.TEST_FTP_REMOTE_ROOT_1,
+      remoteRoot: process.env.SERVER_FTP_FOLDER,
       include: ["import.csv"],
       exclude: ["dist/**.map", "node_modules/**", "node_modules/**", ".git/**"],
       deleteRemote: false,
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       sftp: false,
     };
 
-    ftpDeploy
+    return ftpDeploy
       .deploy(config)
       .then((result) => {
         var success, message;
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     console.log(err);
     return res.send({
       success: false,
-      message: "Oops, unfortuantely an error occured!",
+      message: "Oops, unfortunately an error occured!",
     });
   }
 }

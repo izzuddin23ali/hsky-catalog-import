@@ -13,14 +13,14 @@ export default async function handler(req, res) {
   await cors(req, res);
 
   try {
-    var trigger_url = process.env.TEST_IMPORT_TRIGGER_1;
-    var processing_url = process.env.TEST_IMPORT_PROCESSING_1;
+    var trigger_url = process.env.IMPORT_TRIGGER_URL;
+    var processing_url = process.env.IMPORT_PROCESSING_URL;
     const instance = axios.create({
       baseURL: processing_url,
       timeout: 3600000,
     });
 
-    axios.get(trigger_url).then(async (response) => {
+    return axios.get(trigger_url).then(async (response) => {
       console.log(response.data.status);
       console.log(response.data.message);
       instance.get().then(async (response) => {

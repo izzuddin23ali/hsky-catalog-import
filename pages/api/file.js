@@ -1,7 +1,4 @@
-import axios from "axios";
 import { IncomingForm } from "formidable";
-import { promises as fs } from "fs";
-
 var mv = require("mv");
 
 export const config = {
@@ -19,12 +16,9 @@ export default async (req, res) => {
       console.log(fields, files);
       console.log(files.file.filepath);
       var oldPath = files.file.filepath;
-      //var newPath = `./public/import/${files.file.originalFilename}`;
       var newPath = `./public/import/import.csv`;
       mv(oldPath, newPath, function (err) {});
       res.status(200).json({ fields, files });
     });
-
-    //axios(process.cwd() + "/pages/api/ftp");
   });
 };

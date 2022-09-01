@@ -22,9 +22,19 @@ export default function Home(props) {
 export const getServerSideProps = withSessionSsr(
   async function getServerSideProps({ req }) {
     const catalogURL = process.env.MAIN_CATALOG_URL;
+    const user = req.session.user;
+    if (!user) {
+      return {
+        props: {
+          catalogURL: catalogURL,
+          user: null,
+        },
+      };
+    }
     return {
-      props: {
-        catalogURL: catalogURL,
+      redirect: {
+        permanent: false,
+        destination: "/dashboard",
       },
     };
   }

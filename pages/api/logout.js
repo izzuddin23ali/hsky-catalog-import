@@ -1,16 +1,22 @@
-import { withIronSessionApiRoute } from "iron-session/next";
+import { withSessionRoute } from "../../lib/auth/withSession";
 
-export default withIronSessionApiRoute(
-  function logoutRoute(req, res, session) {
-    req.session.destroy();
-    res.send({ ok: true });
-  },
-  {
-    cookieName: "myapp_cookiename",
-    password: "complex_password_at_least_32_characters_long",
-    // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
-    cookieOptions: {
-      secure: process.env.NODE_ENV === "production",
-    },
+async function logoutRoute(req, res) {
+  try {
+    if (req.method == "POST") {
+      req.session.destroy();
+      return res.send({ success: true, message: "Successfully logged out." });
+    } else {
+      return res.send({
+        success: false,
+        message: "This is not the route you are looking for!",
+      });
+    }
+  } catch (error) {
+    console.log(error, error.message);
+    return res
+      .status(500)
+      .send({ success: false, message: "Error attempting to logout." });
   }
-);
+}
+
+export default withSessionRoute(logoutRoute);

@@ -1,16 +1,31 @@
 import styles from "./Navbar.module.scss";
 import cx from "classnames";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Offcanvas from "react-bootstrap/Offcanvas";
+import { Nav, Navbar, Dropdown, Offcanvas } from "react-bootstrap";
 import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { useRouter } from "next/router";
 
-export default function Header({ children }) {
+export default function Header({ children, session }) {
   const expand = "md";
+  const router = useRouter();
+
+  const handleLogout = () => {
+    axios
+      .post("/api/logout", {})
+      .then(function (response) {
+        console.log(response);
+        if (response.data.success) {
+          router.replace("/");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <Navbar key={expand} expand={expand} className={styles.mainNav}>
@@ -56,18 +71,34 @@ export default function Header({ children }) {
                   styles.navUser
                 )}
               >
-                <Link href="/#">
-                  <a
-                    className={cx(
-                      "d-inline-flex",
-                      styles.userDropdown,
-                      styles.loggedOut
-                    )}
-                  >
-                    <span className={styles.user}>Not logged in</span>
-                    <FontAwesomeIcon icon={faCircleUser} />
-                  </a>
-                </Link>
+                {session ? (
+                  <div className={styles.loggedIn}>
+                    <Dropdown>
+                      <Dropdown.Toggle>
+                        <span className={styles.user}>{session.username}</span>
+                        <FontAwesomeIcon icon={faCircleUser} />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu className={styles.dropdownMenuRight}>
+                        <Dropdown.Item onClick={handleLogout}>
+                          Log Out
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                ) : (
+                  <Link href="/#">
+                    <a
+                      className={cx(
+                        "d-inline-flex",
+                        styles.userDropdown,
+                        styles.loggedOut
+                      )}
+                    >
+                      <span className={styles.user}>Not logged in</span>
+                      <FontAwesomeIcon icon={faCircleUser} />
+                    </a>
+                  </Link>
+                )}
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>

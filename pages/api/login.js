@@ -18,7 +18,7 @@ async function loginRoute(req, res) {
         username: req.body.username,
         password: req.body.password,
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.data.success == true) {
           req.session.user = {
             id: response.data.user_id,
@@ -30,8 +30,7 @@ async function loginRoute(req, res) {
             success: true,
             message: "Authentication successful.",
           });
-        }
-        else {
+        } else {
           return res.send({
             success: false,
             message: response.data.message,

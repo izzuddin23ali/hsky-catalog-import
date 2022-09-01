@@ -57,3 +57,44 @@
     }
   }
 }
+
+.loggedIn {
+  button {
+    background: $sky-blue !important;
+    border: 0 !important;
+    border-radius: 20px !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    padding: 7px 20px;
+    .user {
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    svg {
+      padding-top: 2px;
+    }
+  }
+  .dropdownMenuRight {
+    border-radius: 8px !important;
+    margin-top: 24px;
+    border: 1px solid #00000020;
+    padding: 0;
+    a {
+      padding: 12px 20px;
+      width: unset;
+      font-size: 14px !important;
+      background: none;
+      color: #000;
+      border: 0;
+      font-weight: 800;
+      text-transform: uppercase;
+      transition: all 0.2s ease-in;
+      &:hover {
+        background: $sky-blue;
+        color: #fff;
+      }
+    }
+  }
+}
