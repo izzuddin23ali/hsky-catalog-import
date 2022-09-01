@@ -10,6 +10,13 @@ const cors = initMiddleware(
 
 export default async function handler(req, res) {
   await cors(req, res);
+  const filePath = req.body.filePath;
+  var pathSplit = filePath.split("\\");
+  var fileName = pathSplit.pop();
+  var rootFolder = filePath.replace("\\" + fileName, "");
+  console.log(fileName);
+  console.log("ftp", filePath);
+  console.log(rootFolder);
 
   const FtpDeploy = require("ftp-deploy");
   const ftpDeploy = new FtpDeploy();
@@ -20,9 +27,9 @@ export default async function handler(req, res) {
       password: process.env.SERVER_FTP_PASSWORD,
       host: process.env.SERVER_FTP_HOST,
       port: 21,
-      localRoot: process.cwd() + "/public/import",
+      localRoot: rootFolder,
       remoteRoot: process.env.SERVER_FTP_FOLDER,
-      include: ["import.csv"],
+      include: [fileName],
       exclude: ["dist/**.map", "node_modules/**", "node_modules/**", ".git/**"],
       deleteRemote: false,
       forcePasv: true,

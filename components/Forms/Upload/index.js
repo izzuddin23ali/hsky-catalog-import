@@ -85,26 +85,42 @@ export default function FileUpload() {
   const uploadToLocal = async (event) => {
     const body = new FormData();
     body.append("file", image);
-    const response = await fetch("/api/file", {
-      method: "POST",
-      body,
-    });
-    if (response.status == 200) {
-      setRunning(true);
-      axios.get("/api/ftp").then((res) => {
-        console.log(res);
-        setUploaded(true);
-        if (res.status == 200) {
-          setTriggered(true);
-          axios.get("/api/import").then((res) => {
-            console.log(res);
-            if (res.status == 200) {
-              setComplete(true);
-            }
-          });
+    axios
+      .post("/api/file", body, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((fileResponse) => {
+        console.log(fileResponse.data.filePath);
+        if (fileResponse.status == 200) {
+          setRunning(true);
+          axios
+            .post("/api/ftp", { filePath: fileResponse.data.filePath })
+            .then((ftpResponse) => {
+              if (ftpResponse.data.success == true) {
+                setUploaded(true);
+                axios.get("/api/import").then((importResponse) => {
+                  setTriggered(true);
+                  if (importResponse.status == 200) {
+                    setComplete(true);
+                  }
+                });
+              } else {
+                setErrorMessage("Error found with FTP Upload");
+                setComplete(true);
+              }
+            });
+        } else {
+          setErrorMessage("Error found with file handling");
+          setComplete(true);
         }
+      })
+      .catch((error) => {
+        console.log("error found");
+        setErrorMessage("Error found with file handling");
+        setComplete(true);
       });
-    }
   };
 
   const resetAllState = () => {
@@ -234,7 +250,7 @@ export default function FileUpload() {
             </button>
           </div>
         </div>
-        {isComplete ? (
+        {isComplete && (
           <div className="row mt-4 mb-4">
             <div
               className={cx(
@@ -246,7 +262,7 @@ export default function FileUpload() {
               <button onClick={resetAllState}>Upload Another CSV</button>
             </div>
           </div>
-        ) : undefined}
+        )}
       </div>
     </div>
   );

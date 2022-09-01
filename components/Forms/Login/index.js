@@ -13,6 +13,10 @@ export default function LoginForm() {
     <div className="row d-flex justify-content-center align-items-center">
       <div className={cx("col-12 col-md-6", styles.loginContainer)}>
         <h1>H Sky Sheet Importer</h1>
+        <p>
+          Your credentials to log in here are the same as your credentials on
+          the Catalog website. <strong>For authorized use only.</strong>
+        </p>
         <Formik
           initialValues={{ username: "", password: "" }}
           validate={(values) => {
@@ -92,7 +96,7 @@ export default function LoginForm() {
                 </button>
               ) : (
                 <button className="btn" type="submit">
-                  Submit
+                  Log in
                 </button>
               )}
               {errorMessage && (
