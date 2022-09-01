@@ -13,7 +13,12 @@ export default function CatalogBox(props, { children }) {
               <p className="mt-0 pt-0 mb-4">
                 Looking to log in to the main catalog website instead?
               </p>
-              <a target="_blank" href={catalogURL} className={styles.button}>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={catalogURL}
+                className={styles.button}
+              >
                 Take me there
               </a>
             </div>

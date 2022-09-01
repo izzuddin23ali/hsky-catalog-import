@@ -9,7 +9,7 @@ export default function Footer({ children }) {
         H Sky Trading Company © {currentYear}
         <br />
         Web App by{" "}
-        <a target="_blank" href="https://talkwithalfred.com">
+        <a target="_blank" rel="noreferrer" href="https://talkwithalfred.com">
           Alfred Insights & Consultancy
         </a>
       </p>
