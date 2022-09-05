@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import axios from "axios";
 import Papa from "papaparse";
 import Loading from "../../LoadingRing";
+import InfoBoxCSV from "../../InfoBoxCSV";
 import cx from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
@@ -21,6 +22,7 @@ export default function FileUpload() {
   const [data, setData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [file, setFile] = useState("");
+  const [infoCSV, setInfoCSV] = useState(null);
 
   const ref = useRef();
 
@@ -67,13 +69,21 @@ export default function FileUpload() {
         complete: function (results, file) {
           console.log("Parsing complete:", results, file);
           console.log(results.meta.fields);
+          console.log(results.data.length);
+          var parseData = {
+            rowsAmount: results.data.length,
+            rows: results.data,
+            columns: results.meta.fields,
+          };
           setData(results.meta.fields);
+          setInfoCSV(parseData);
           setValid(true);
+
           validColumns.forEach((col) => {
             if (results.meta.fields.indexOf(col) < 0) {
               setValid(false);
               setErrorMessage(
-                "CSV file have either missing or additional columns, please input appropriate CSV file."
+                "CSV file selected has either incorrect, missing or additional columns. Please select a valid CSV file."
               );
             }
           });
@@ -81,6 +91,23 @@ export default function FileUpload() {
       });
     }
   };
+
+  function checkProcessing() {
+    console.log("processing begins");
+    axios.get("/api/processing").then((processResponse) => {
+      if (processResponse.data.finished == true) {
+        console.log("habis");
+        setComplete(true);
+      } else if (processResponse.data.finished == false) {
+        console.log("still running");
+        setTimeout(checkProcessing, 30000);
+      } else if (processResponse.data.finished == null) {
+        console.log("something broke!");
+        setComplete(true);
+        setErrorMessage("Error found with file handling");
+      }
+    });
+  }
 
   const uploadToLocal = async (event) => {
     const body = new FormData();
@@ -100,10 +127,12 @@ export default function FileUpload() {
             .then((ftpResponse) => {
               if (ftpResponse.data.success == true) {
                 setUploaded(true);
-                axios.get("/api/import").then((importResponse) => {
+                const start = window.performance.now();
+                axios.get("/api/trigger").then((importResponse) => {
                   setTriggered(true);
-                  if (importResponse.status == 200) {
-                    setComplete(true);
+                  if (importResponse.data.message == "Timeout") {
+                    console.log("thats a timeout");
+                    checkProcessing();
                   }
                 });
               } else {
@@ -140,16 +169,16 @@ export default function FileUpload() {
             <h1>CSV Upload</h1>
           </div>
         </div>
-        <div className={cx("row mb-4", styles.progressContainer)}>
+        <div className={cx("row mb-2", styles.progressContainer)}>
           {isValid ? (
-            <div className="col-12 col-md-6 col-lg-3 complete">
+            <div className="col-12 col-md-6 col-lg-3 mb-3 complete">
               <div className={cx(styles.progressBox, styles.complete)}>
                 <FontAwesomeIcon icon={faCircleCheck} />
                 1. File Valid
               </div>
             </div>
           ) : (
-            <div className="col-12 col-md-6 col-lg-3">
+            <div className="col-12 col-md-6 col-lg-3 mb-3">
               <div className={cx(styles.progressBox, styles.complete)}>
                 1. Select File
               </div>
@@ -158,15 +187,15 @@ export default function FileUpload() {
 
           {!isRunning && (
             <>
-              <div className="col-12 col-md-6 col-lg-3">
+              <div className="col-12 col-md-6 col-lg-3 mb-3">
                 <div className={styles.progressBox}>2. Store File Locally</div>
               </div>
-              <div className="col-12 col-md-6 col-lg-3">
+              <div className="col-12 col-md-6 col-lg-3 mb-3">
                 <div className={styles.progressBox}>
                   3. Upload File to Server
                 </div>
               </div>
-              <div className="col-12 col-md-6 col-lg-3">
+              <div className="col-12 col-md-6 col-lg-3 mb-3">
                 <div className={styles.progressBox}>4. Run Import Process</div>
               </div>
             </>
@@ -175,14 +204,14 @@ export default function FileUpload() {
           {isRunning && (
             <>
               {isUploaded ? (
-                <div className="col-12 col-md-6 col-lg-3 complete">
+                <div className="col-12 col-md-6 col-lg-3 mb-3 complete">
                   <div className={cx(styles.progressBox, styles.complete)}>
                     <FontAwesomeIcon icon={faCircleCheck} />
                     2. Uploaded
                   </div>
                 </div>
               ) : (
-                <div className="col-12 col-md-6 col-lg-3">
+                <div className="col-12 col-md-6 col-lg-3 mb-3">
                   <div className={styles.progressBox}>
                     <Loading size="40px" innersize="40px" />
                     2. Uploading
@@ -191,14 +220,14 @@ export default function FileUpload() {
               )}
 
               {isTriggered ? (
-                <div className="col-12 col-md-6 col-lg-3 complete">
+                <div className="col-12 col-md-6 col-lg-3 mb-3 complete">
                   <div className={cx(styles.progressBox, styles.complete)}>
                     <FontAwesomeIcon icon={faCircleCheck} />
                     3. FTP Uploaded
                   </div>
                 </div>
               ) : (
-                <div className="col-12 col-md-6 col-lg-3">
+                <div className="col-12 col-md-6 col-lg-3 mb-3">
                   <div className={styles.progressBox}>
                     <Loading size="40px" innersize="40px" />
                     3. FTP Uploading
@@ -207,14 +236,14 @@ export default function FileUpload() {
               )}
 
               {isComplete ? (
-                <div className="col-12 col-md-6 col-lg-3 complete">
+                <div className="col-12 col-md-6 col-lg-3 mb-3 complete">
                   <div className={cx(styles.progressBox, styles.complete)}>
                     <FontAwesomeIcon icon={faCircleCheck} />
                     4. Importing Completed
                   </div>
                 </div>
               ) : (
-                <div className="col-12 col-md-6 col-lg-3">
+                <div className="col-12 col-md-6 col-lg-3 mb-3">
                   <div className={styles.progressBox}>
                     <Loading size="40px" innersize="40px" />
                     4. Importing in Progress
@@ -225,7 +254,7 @@ export default function FileUpload() {
           )}
         </div>
         <div className={cx("row", styles.uploadForm)}>
-          <div className={isRunning ? "d-none" : "col-12"}>
+          <div className={isRunning ? "d-none" : "col-12 overflow-hidden"}>
             <label htmlFor="file">Select a file to upload</label>
             <span className={styles.uploadInfo}>*only accepts CSV file</span>
             <input
@@ -237,9 +266,6 @@ export default function FileUpload() {
               onChange={uploadToClient}
               disabled={isUploaded ? "disabled" : undefined}
             />
-            {errorMessage && (
-              <span className={styles.errorMessage}>{errorMessage}</span>
-            )}
             <button
               className={isValid ? styles.validButton : styles.disabledButton}
               type="submit"
@@ -249,7 +275,11 @@ export default function FileUpload() {
               Submit
             </button>
           </div>
+          {errorMessage && (
+            <span className={styles.errorMessage}>{errorMessage}</span>
+          )}
         </div>
+        {infoCSV && <InfoBoxCSV data={infoCSV} valid={validColumns} />}
         {isComplete && (
           <div className="row mt-4 mb-4">
             <div

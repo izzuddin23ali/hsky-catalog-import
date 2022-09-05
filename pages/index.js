@@ -7,7 +7,7 @@ export default function Home(props) {
   const catalogURL = props.catalogURL;
   return (
     <Layout title="Home">
-      <div className="container py-5">
+      <div className="container py-5 px-4 px-md-0">
         <LoginForm />
         {catalogURL && (
           <div className="mt-5">

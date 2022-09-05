@@ -13,21 +13,25 @@ export default async function handler(req, res) {
   await cors(req, res);
 
   try {
-    var trigger_url = process.env.IMPORT_TRIGGER_URL;
     var processing_url = process.env.IMPORT_PROCESSING_URL;
+
     const instance = axios.create({
       baseURL: processing_url,
-      timeout: 3600000,
+      timeout: 6000,
     });
-
-    return axios.get(trigger_url).then(async (response) => {
+    return instance.get().then(async (response) => {
       console.log(response.data.status);
       console.log(response.data.message);
-      instance.get().then(async (response) => {
+      var message = response.data.message;
+      if (message.toLowerCase().includes("already processing")) {
+        return res.status(200).send({ finished: false, message: "Importing." });
+      } else if (message.toLowerCase().includes("not triggered")) {
+        return res.status(200).send({ finished: true, message: "Finished." });
+      } else {
         return res
-          .status(response.data.status)
-          .send({ message: response.data.message });
-      });
+          .status(500)
+          .send({ finished: null, message: "Something went wrong!" });
+      }
     });
   } catch (err) {
     console.log("an error occured");

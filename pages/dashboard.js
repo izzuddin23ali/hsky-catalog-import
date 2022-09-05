@@ -6,7 +6,7 @@ export default function Dashboard({ user }) {
   const name = user.full_name;
   return (
     <Layout title="Dashboard" session={user}>
-      <div className="container">
+      <div className="container py-5">
         <FileUpload />
       </div>
     </Layout>
