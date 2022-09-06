@@ -9,8 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function FileUpload() {
-  const [image, setImage] = useState(null);
-  const [createObjectURL, setCreateObjectURL] = useState(null);
+  const [file, setFile] = useState(null);
 
   const [isValid, setValid] = useState(null);
 
@@ -19,9 +18,8 @@ export default function FileUpload() {
   const [isTriggered, setTriggered] = useState(false);
   const [isComplete, setComplete] = useState(false);
 
-  const [data, setData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const [file, setFile] = useState("");
+  const [message, setMessage] = useState("");
   const [infoCSV, setInfoCSV] = useState(null);
 
   const ref = useRef();
@@ -44,14 +42,12 @@ export default function FileUpload() {
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0];
 
-      setImage(i);
-      setCreateObjectURL(URL.createObjectURL(i));
+      setFile(i);
       setErrorMessage("");
 
       var filetype = i.type;
 
       if (filetype == "text/csv") {
-        setFile(i);
         handleParse(i);
       } else {
         setValid(false);
@@ -62,7 +58,9 @@ export default function FileUpload() {
 
   const handleParse = async (inFile) => {
     if (!inFile) {
-      console.log("no file yet");
+      setErrorMessage(
+        "Error with processing file. Please refresh and try again."
+      );
     } else {
       Papa.parse(inFile, {
         header: true,
@@ -75,7 +73,6 @@ export default function FileUpload() {
             rows: results.data,
             columns: results.meta.fields,
           };
-          setData(results.meta.fields);
           setInfoCSV(parseData);
           setValid(true);
 
@@ -93,25 +90,24 @@ export default function FileUpload() {
   };
 
   function checkProcessing() {
-    console.log("processing begins");
+    console.log("checking processing url");
     axios.get("/api/processing").then((processResponse) => {
       if (processResponse.data.finished == true) {
-        console.log("habis");
+        setMessage("Import process has completed.");
         setComplete(true);
       } else if (processResponse.data.finished == false) {
-        console.log("still running");
         setTimeout(checkProcessing, 30000);
       } else if (processResponse.data.finished == null) {
-        console.log("something broke!");
+        setMessage("Error occured during import process.");
         setComplete(true);
-        setErrorMessage("Error found with file handling");
+        setErrorMessage("An error occured with importing the sheet.");
       }
     });
   }
 
   const uploadToLocal = async (event) => {
     const body = new FormData();
-    body.append("file", image);
+    body.append("file", file);
     axios
       .post("/api/file", body, {
         headers: {
@@ -146,7 +142,6 @@ export default function FileUpload() {
         }
       })
       .catch((error) => {
-        console.log("error found");
         setErrorMessage("Error found with file handling");
         setComplete(true);
       });
@@ -253,6 +248,19 @@ export default function FileUpload() {
             </>
           )}
         </div>
+        {isComplete && (
+          <div className="row mt-4 mb-4">
+            <div
+              className={cx(
+                "col-12 col-md-10 mx-auto",
+                styles.completeContainer
+              )}
+            >
+              <p className={styles.message}>{message}</p>
+              <button onClick={resetAllState}>Upload Another CSV</button>
+            </div>
+          </div>
+        )}
         <div className={cx("row", styles.uploadForm)}>
           <div className={isRunning ? "d-none" : "col-12 overflow-hidden"}>
             <label htmlFor="file">Select a file to upload</label>
@@ -276,23 +284,12 @@ export default function FileUpload() {
             </button>
           </div>
           {errorMessage && (
-            <span className={styles.errorMessage}>{errorMessage}</span>
+            <div className="col-12 mt-4">
+              <span className={styles.errorMessage}>{errorMessage}</span>
+            </div>
           )}
         </div>
         {infoCSV && <InfoBoxCSV data={infoCSV} valid={validColumns} />}
-        {isComplete && (
-          <div className="row mt-4 mb-4">
-            <div
-              className={cx(
-                "col-12 col-md-10 mx-auto",
-                styles.completeContainer
-              )}
-            >
-              <p>Import process has completed.</p>
-              <button onClick={resetAllState}>Upload Another CSV</button>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
